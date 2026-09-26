@@ -10,6 +10,8 @@ export type RoomObjectKey =
   | 'tile'
   | 'keyItem';
 
+export type CameraFocus = RoomObjectKey | null;
+
 export type ActionType = 
   | 'inspect'
   | 'use_item'
@@ -57,15 +59,22 @@ export type TraitName =
   | 'patternPlayer';
 
 export interface BehaviorProfile {
-  rusher: number;        // 0 - 100
-  explorer: number;      // 0 - 100
-  repeater: number;      // 0 - 100
-  collector: number;     // 0 - 100
-  observer: number;      // 0 - 100
-  riskTaker: number;     // 0 - 100
-  patternPlayer: number; // 0 - 100
+  rusher: number;          // 0 - 100
+  explorer: number;        // 0 - 100
+  repeater: number;        // 0 - 100
+  collector: number;       // 0 - 100
+  observer: number;        // 0 - 100
+  riskTaker: number;       // 0 - 100
+  patternPlayer: number;   // 0 - 100
   dominantTrait: TraitName;
   predictabilityScore: number; // 0 - 100
+  
+  // Real tracking specifics for Loop 7 reveal
+  doorFirstCount: number;
+  mostVisitedObject: RoomObjectKey | null;
+  mostRepeatedSequence: string | null;
+  leastVisitedObject: RoomObjectKey | null;
+  rapidClickWarnings: number;
 }
 
 export interface ActionStats {
@@ -84,6 +93,8 @@ export interface ActionStats {
   explorationCount: number;
   recentActionSequence: RoomObjectKey[];
   loopFirstActions: Record<number, RoomObjectKey>;
+  rapidClickCount: number;
+  lastClickTimestamp: number;
 }
 
 export interface RoomState {
@@ -91,6 +102,7 @@ export interface RoomState {
   lampUV: boolean;
   drawerOpen: boolean;
   drawerUnlocked: boolean;
+  drawerBolted: boolean;
   deskUnlocked: boolean;
   tileLifted: boolean;
   paintingTilted: boolean;
@@ -99,11 +111,13 @@ export interface RoomState {
   doorCode: string;
   enteredDoorCode: string;
   doorUnlocked: boolean;
+  doorOpen: boolean;
   doorMissingHandle: boolean;
   doorLockedByHabit: boolean;
   activeDecoyTriggered: boolean;
   clockHands: { hour: number; minute: number; second: number };
   clockSecretFound: boolean;
+  clockStopped: boolean;
   deskPrismSlotFilled: boolean;
   loop4HabitNeutralized: boolean;
   loop6GlitchCount: number;
@@ -111,6 +125,7 @@ export interface RoomState {
   loop8UniqueInteractions: RoomObjectKey[];
   loop8PatternBroken: boolean;
   loop8TrappedCount: number;
+  predictedNextObject: RoomObjectKey | null;
 }
 
 export type EndingType = 'escape' | 'trapped' | 'secret';
